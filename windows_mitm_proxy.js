@@ -50,7 +50,7 @@ press('ENTER')
 delay(1000)
 press('ENTER')
 
-// Continue setting the CA reg key
+// Continue setting the proxy reg key
 type('Set-ItemProperty -path $regKey ProxyEnable -value 1')
 press("ENTER")
 type('Set-ItemProperty -path $regKey ProxyServer -value $proxy')
